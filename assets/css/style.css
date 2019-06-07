@@ -1,4 +1,39 @@
-.col-8 {
+.col-8,
+.col-12 {
     display: flex;
     justify-content: center;
+}
+
+.game-body {
+    background-color: darkslategrey;
+    color: white;
+}
+
+.game-pic {
+    width: 300px;
+}
+
+.img-div {
+    display: inline-block;
+}
+
+#score-board {
+    display: flex;
+    flex-direction: column;
+}
+
+#message-box {
+    overflow-y: scroll;
+}
+
+@media screen and (max-width: 1000px) {
+    .game-pic {
+        width: 150px;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .game-pic {
+        width: 130px;
+    }
 }
