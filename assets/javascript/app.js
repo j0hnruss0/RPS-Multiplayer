@@ -147,9 +147,9 @@ function gameOver(firstMove, lastMove) {
             console.log("Scissors cuts Paper, You Lose...");
             $(".game-results").html("Scissors cuts Paper, You Lose...");
         } 
-    } else {
+    } else if ((firstMove.includes("paper") && lastMove.includes("paper")) || (firstMove.includes("scissors") && lastMove.includes("scissors")) || (firstMove.includes("rock") && lastMove.includes("rock"))) {
         console.log("Looks like a tie");
-        $(".game-results").html
+        $(".game-results").html("Looks like a tie");
     }
 }
 

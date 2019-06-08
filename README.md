@@ -7,4 +7,4 @@ firebase-powered online JavaScript game of rock, paper, scissors!. Just sign in 
 
 Added functionality (chatroom, improved graphics) to be added later
 
-Bugs: moves logged sometime don't trigger the game state h3 tag, tie games not registered yet
+Bugs: moves logged sometime don't trigger the game state h3 tag
