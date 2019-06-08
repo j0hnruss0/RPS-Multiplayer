@@ -1,6 +1,8 @@
 # RPS-Multiplayer
 Week 7
 
-Game Incomplete: Still trying to figure out multiplayer functionality
+Rock Paper Scissors: Multiplayer!
 
-Multiple bugs: clicks are registered multiple times when apending to the message box
+firebase-powered online JavaScript game of rock, paper, scissors!. Just sign in (anonymous firebase account) and click on the image you want to throw while your opponent does the same. 
+
+Added functionality (chatroom, improved graphics) to be added later

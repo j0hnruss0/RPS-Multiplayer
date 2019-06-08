@@ -12,8 +12,9 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 var database = firebase.database();
-var playerCounter = 0;
 var playerId;
+var firstMove;
+var lastMove;
 
 $("#play-area").hide();
 $("#score-board").hide();
@@ -38,7 +39,6 @@ $("#game-starter").on("click", function(event) {
             var isAnonymous = player.isAnonymous;
             var uid = player.uid;
             database.ref("player/" + playerId).set({
-                move: "none",
                 uid: uid,
                 isAnonymous: isAnonymous
                 
@@ -66,57 +66,105 @@ $(document).on("click", ".img-div", function(event) {
     event.preventDefault();
     if ($(this).is("#pick-rock")) {
         console.log(playerId +" picks rock");
-        database.ref("player/" + playerId).update({
-            move: "rock"
-        });
-        playerCounter +=1;
+        database.ref("move").push(playerId + " picks rock");
+        
     } 
     else if ($(this).is("#pick-paper")) {
         console.log(playerId +" picks paper");
-        database.ref("player/" + playerId).update({
-            move: "paper"
-        });
-        playerCounter +=1;
+        database.ref("move").push(playerId + " picks paper");
+        
     } 
     else if ($(this).is("#pick-scissors")) {
         console.log(playerId +" picks scissors");
-        database.ref("player/" + playerId).update({
-            move: "scissors"
-        });
-        playerCounter +=1;
+        database.ref("move").push(playerId + " picks scissors");
+        
     }
-    playerMoves();
+    
 })
 
-function findData() {
-    database.ref("player").child(playerId).on("value", function(snapshot) {
-        var moved = snapshot.val().uid;
-        console.log(moved);
-    })
-}
-
-function playerMoves() {
-    database.ref("player/" + playerId).on("value", function(snapshot) {
-        if (playerCounter === 1) {
-            var firstMove = snapshot.val().move;
-            $("#message-box").append("<p>" + playerId + " picks " + firstMove + "</p>");
-        } else if (playerCounter === 2) {
-            var secondMove = snapshot.val().move;
-            $("#message-box").append("<p>" + playerId + " responds with " + secondMove + "</p>");
-            gameOver(firstMove, secondMove);
-        }
+database.ref("move").limitToLast(2).on("child_added", function(snapshot) {
+    var moved = [snapshot.val()];
+    moved.forEach(function() {
+        $("#message-box").prepend("<div class='well'><span>" + moved + "</span></div>");
+        
     });
 
-};
+    gameOver();
+    
+    
+}, function(errorObject) {
+    console.log("Errors handled: " + errorObject.code);
+});
 
-function gameOver(firstMove, secondMove) {
-    console.log("game over");
-    playerCounter = 0;
-    if ((firstMove === "paper" && secondMove === "rock") || (firstMove === "rock" && secondMove === "scissors") || (firstMove === "scissors" && secondMove === "paper")) {
-        $("#message-box").append("Player One wins!");
-    } else if ((firstMove === "rock" && secondMove === "paper") || (firstMove === "scissors" && secondMove === "rock") || (firstMove === "paper" && secondMove === "scissors")) {
-        $("#message-box").append("Player Two wins!");
-    } else if ((firstMove === "rock" && secondMove === "rock") || (firstMove === "scissors" && secondMove === "scissors") || (firstMove === "paper" && secondMove === "paper")) {
-        $("#message-box").append("Draw!");
+function gameOver(firstMove, lastMove) {
+    firstMove = document.getElementsByClassName("well")[1].innerText;
+    lastMove = document.getElementsByClassName("well")[0].innerText;
+    if (firstMove.includes("rock") && lastMove.includes("scissors")) {
+        if (firstMove.includes(playerId)) {
+            console.log("Rock breaks Scissors, You Win!");
+            $(".game-results").html("Rock breaks Scissors, You Win!");
+        } else if (lastMove.includes(playerId)) {
+            console.log("Rock breaks Scissors, You Lose...");
+            $(".game-results").html("Rock breaks Scissors, You Lose...");
+        } 
+    } else if (firstMove.includes("scissors") && lastMove.includes("paper")) {
+        if (firstMove.includes(playerId)) {
+            console.log("Scissors cuts Paper, You Win!");
+            $(".game-results").html("Scissors cuts Paper, You Win!");
+        } else if (lastMove.includes(playerId)) {
+            console.log("Scissors cuts Paper, You Lose...");
+            $(".game-results").html("Scissors cuts Paper, You Lose...");
+        } 
+    } else if (firstMove.includes("paper") && lastMove.includes("rock")) {
+        if (firstMove.includes(playerId)) {
+            console.log("Paper covers Rock, You Win!");
+            $(".game-results").html("Paper covers Rock, You Win!");
+        } else if (lastMove.includes(playerId)) {
+            console.log("Paper covers Rock, You Lose...");
+            $(".game-results").html("Paper covers Rock, You Lose...");
+        } 
+    } else if (firstMove.includes("scissors") && lastMove.includes("rock")) {
+        if (lastMove.includes(playerId)) {
+            console.log("Rock breaks Scissors, You Win!");
+            $(".game-results").html("Rock breaks Scissors, You Win!");
+        } else if (firstMove.includes(playerId)) {
+            console.log("Rock breaks Scissors, You Lose...");
+            $(".game-results").html("Rock breaks Scissors, You Lose...");
+        } 
+    } else if (firstMove.includes("rock") && lastMove.includes("paper")) {
+        if (lastMove.includes(playerId)) {
+            console.log("Paper covers Rock, You Win!");
+            $(".game-results").html("Paper covers Rock, You Win!");
+        } else if (firstMove.includes(playerId)) {
+            console.log("Paper covers Rock, You Lose...");
+            $(".game-results").html("Paper covers Rock, You Lose...");
+        } 
+    } else if (firstMove.includes("paper") && lastMove.includes("scissors")) {
+        if (lastMove.includes(playerId)) {
+            console.log("Scissors cuts Paper, You Win!");
+            $(".game-results").html("Scissors cuts Paper, You Win!");
+        } else if (firstMove.includes(playerId)) {
+            console.log("Scissors cuts Paper, You Lose...");
+            $(".game-results").html("Scissors cuts Paper, You Lose...");
+        } 
+    } else {
+        console.log("Looks like a tie");
+        $(".game-results").html
     }
 }
+
+function findData() {
+    database.ref("move").limitToLast(2).on("child_added", function(snapshot) {
+        var firstMove = document.getElementsByClassName("well")[1].innerText;
+        var lastMove = document.getElementsByClassName("well")[0].innerText;
+        var moved = [snapshot.val()];
+        console.log(moved);
+        if (firstMove.includes("rock") && lastMove.includes("scissors")) {
+            if (firstMove.includes(playerId)) {
+                console.log("Rock beats Scissors, You Win!");
+            } else if (lastMove.includes(playerId)) {
+                console.log("Rock beats Scissors, You Lose...");
+            } 
+        }
+    })
+};

@@ -10,30 +10,53 @@
 }
 
 .game-pic {
-    width: 300px;
+    width: 250px;
+}
+
+.paper-pic {
+    height: 300px;
 }
 
 .img-div {
     display: inline-block;
 }
 
+.well {
+    color: black;
+}
+
 #score-board {
     display: flex;
     flex-direction: column;
+    padding-left: 30%;
 }
 
 #message-box {
-    overflow-y: scroll;
+    overflow-y: hidden;
+    height: 150px;
+    width: 60%;
+}
+
+.game-results {
+    text-align: left;
 }
 
 @media screen and (max-width: 1000px) {
     .game-pic {
-        width: 150px;
+        width: 120px;
+    }
+
+    .paper-pic {
+        height: 140px;
     }
 }
 
 @media screen and (max-width: 700px) {
     .game-pic {
-        width: 130px;
+        width: 100px;
+    }
+
+    .paper-pic {
+        height: 110px;
     }
 }
