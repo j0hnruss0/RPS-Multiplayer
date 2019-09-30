@@ -9,6 +9,6 @@ Added functionality (chatroom, improved graphics) to be added later
 
 Bugs: moves logged sometime don't trigger the game state h3 tag
 
-<img src="rps.multi.png" width="800">
+<img src="rps-multi.png" width="800">
 
 ### Click [here](https://j0hnruss0.github.io/RPS-Multiplayer/) to play! 
